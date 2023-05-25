@@ -1,0 +1,20 @@
+diff --git a/node_modules/vue-bundle-renderer/dist/runtime.mjs b/node_modules/vue-bundle-renderer/dist/runtime.mjs
+index 29154e8..2aa8b45 100644
+--- a/node_modules/vue-bundle-renderer/dist/runtime.mjs
++++ b/node_modules/vue-bundle-renderer/dist/runtime.mjs
+@@ -86,10 +86,13 @@ function getAllDependencies(ids, rendererContext) {
+     Object.assign(allDeps.preload, deps.preload);
+     Object.assign(allDeps.prefetch, deps.prefetch);
+     for (const dynamicDepId of rendererContext.manifest[id]?.dynamicImports || []) {
++      // pages 配下の .js ファイルをどのページにいても全画面分 prefetch してしまう nuxt/bridge のバグなのか不明だが、
++      // その問題の対応のために以下の2箇所をコメントアウトした
++      // https://github.com/ds300/patch-package で postinstall 時に patch を当てるようにした
+       const dynamicDeps = getModuleDependencies(dynamicDepId, rendererContext);
+-      Object.assign(allDeps.prefetch, dynamicDeps.scripts);
++      // Object.assign(allDeps.prefetch, dynamicDeps.scripts);
+       Object.assign(allDeps.prefetch, dynamicDeps.styles);
+-      Object.assign(allDeps.prefetch, dynamicDeps.preload);
++      // Object.assign(allDeps.prefetch, dynamicDeps.preload);
+     }
+   }
+   const filteredPrefetch = {};
